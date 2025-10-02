@@ -5,14 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Office extends Model
+class Shift extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'latitude',
-        'longitude',
-        'radius',
+        'start_time',
+        'end_time',
     ];
 }

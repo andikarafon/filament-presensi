@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offices', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->double('latitude');
-            $table->double('longitude');
-            $table->timestamps();
-            $table->softDeletes();
+        Schema::table('offices', function (Blueprint $table) {
+            $table->integer('radius');
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('offices');
+        Schema::table('Offices', function (Blueprint $table) {
+            $table->dropColumn('radius');
+        });
     }
 };

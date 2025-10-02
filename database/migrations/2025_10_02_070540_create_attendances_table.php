@@ -11,11 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offices', function (Blueprint $table) {
+        Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->double('schedule_latitude');
+            $table->double('schedule_longitude');
+            $table->time('schedule_start_time');
+            $table->time('schedule_end_time');
             $table->double('latitude');
             $table->double('longitude');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('offices');
+        Schema::dropIfExists('attendances');
     }
 };
