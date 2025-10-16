@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +29,10 @@ class UserForm
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state)) //dengan cara ini maka saat update, password tidak berubah
                     ->dehydrated(fn ($state) => filled($state)) //dengan cara ini maka saat update, password tidak berubah
                     ->required(fn (string $context): bool => $context === 'create'), //required ini hanya untuk create, bukan update
+                Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->preload()
+                    ->searchable(),
             ]);
     }
 }
