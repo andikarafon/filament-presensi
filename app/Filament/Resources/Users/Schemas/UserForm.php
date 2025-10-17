@@ -7,32 +7,53 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Hash;
+use Filament\Schemas\Components\Section as ComponentsSection;
 
 class UserForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
-            ->components([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                TextInput::make('email')
-                    ->label('Email address')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                DateTimePicker::make('email_verified_at'),
-                TextInput::make('password')
-                    ->password()
-                    ->maxLength(255)
-                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)) //dengan cara ini maka saat update, password tidak berubah
-                    ->dehydrated(fn ($state) => filled($state)) //dengan cara ini maka saat update, password tidak berubah
-                    ->required(fn (string $context): bool => $context === 'create'), //required ini hanya untuk create, bukan update
-                Select::make('roles')
-                    ->relationship('roles', 'name')
-                    ->preload()
-                    ->searchable(),
-            ]);
+        ->schema([
+            // ===================================
+            // SECTION 1: Informasi Dasar
+            // ===================================
+            ComponentsSection::make('Informasi Dasar')
+                ->description('Nama dan alamat email User.')
+                ->schema([
+                    TextInput::make('name')
+                        ->required()
+                        ->maxLength(255),
+                    TextInput::make('email')
+                        ->label('Email address')
+                        ->email()
+                        ->required()
+                        ->maxLength(255),
+                    DateTimePicker::make('email_verified_at')
+                        ->label('Verified At'),
+                ]),
+
+            // -----------------------------------
+
+            // ===================================
+            // SECTION 2: Pengaturan Keamanan & Peran
+            // ===================================
+            ComponentsSection::make('Pengaturan Keamanan & Peran')
+                ->description('Kata sandi dan hak akses (role) pengguna.')
+                ->schema([
+                    TextInput::make('password')
+                        ->password()
+                        ->maxLength(255)
+                        ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+                        ->dehydrated(fn ($state) => filled($state))
+                        ->required(fn (string $context): bool => $context === 'create')
+                        ->helperText('Kosongkan kolom ini jika Anda tidak ingin mengubah password.'),
+                    Select::make('roles')
+                        ->relationship('roles', 'name')
+                        ->preload()
+                        ->searchable()
+                        ->required() // Menambahkan required untuk memastikan role terpilih
+                ]),
+        ]);
     }
 }
