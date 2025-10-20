@@ -50,6 +50,7 @@ class UserForm
                         ->helperText('Kosongkan kolom ini jika Anda tidak ingin mengubah password.'),
                     Select::make('roles')
                         ->relationship('roles', 'name')
+                        ->multiple() //wajib untuk relasi many-to-many
                         ->preload()
                         ->searchable()
                         ->required() // Menambahkan required untuk memastikan role terpilih

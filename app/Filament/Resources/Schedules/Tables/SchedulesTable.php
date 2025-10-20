@@ -5,11 +5,12 @@ namespace App\Filament\Resources\Schedules\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+
 
 class SchedulesTable
 {
@@ -28,10 +29,17 @@ class SchedulesTable
             ->columns([
                 TextColumn::make('user.name')
                     ->searchable(),
-                ToggleColumn::make('is_wfa')
-                    ->label('WFA'),
+                IconColumn::make('is_wfa')
+                    ->label('WFA')
+                    ->boolean()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
                 TextColumn::make('shift.name')
-                    ->searchable(),
+                    ->searchable()
+                    ->description(fn ($record) => $record->shift?->start_time. ' - '.$record->shift?->end_time),
+                    // shift? artinya null safety
                 TextColumn::make('office.name')
                     ->searchable(),
                 TextColumn::make('created_at')
