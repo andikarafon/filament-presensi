@@ -8,12 +8,23 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
 
 class SchedulesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                $user = Auth::user();
+
+                // Cegah error kalau belum login
+                //jika dijalankan tdk ada error, intelphensenya yang error
+                if ($user && ! $user->hasRole('super_admin')) {
+                    $query->where('user_id', $user->id);
+                }
+            })
             ->columns([
                 TextColumn::make('user.name')
                     ->searchable(),
@@ -36,9 +47,7 @@ class SchedulesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->filters([])
             ->recordActions([
                 EditAction::make(),
             ])
