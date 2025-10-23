@@ -83,6 +83,8 @@
                          component.set('insideRadius', true);
                          component.set('latitude', lat);
                          component.set('longitude', lng);
+                     } else {
+                        alert('Anda di luar Radius!!')
                      }
                  })
              } else {
