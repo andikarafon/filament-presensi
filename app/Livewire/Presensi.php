@@ -20,7 +20,6 @@ class Presensi extends Component
         $schedule = Schedule::where('user_id', Auth::user()->id)->first();
         $attendance = Attendance::where('user_id', Auth::user()->id)
                             ->whereDate('created_at', date('Y-m-d'))->first();
-        // dd($schedule);
         
         return view('livewire.presensi', [
             'schedule' => $schedule,
@@ -32,6 +31,7 @@ class Presensi extends Component
 
     public function store()
     {
+        
         $this->validate([
             'latitude' => 'required',
             'longitude' => 'required'
@@ -41,7 +41,7 @@ class Presensi extends Component
 
         if ($schedule) {
             $attendance = Attendance::where('user_id', Auth::user()->id)
-                            ->where('created_at', Carbon::today())->first();
+                            ->whereDate('created_at', date('Y-m-d'))->first();
             
             if (!$attendance) {
                 $attendance = Attendance::create([
@@ -56,12 +56,21 @@ class Presensi extends Component
                     'end_time' => Carbon::now()->toTimeString(),
                 ]);
             } else {
+                
                 $attendance->update([
-                    'end_latitude' => $this->latitude,
-                    'end_longitude' => $this->longitude,
+                    'latitude' => $this->latitude,
+                    'longitude' => $this->longitude,
                     'end_time' => Carbon::now()->toTimeString(),
                 ]);
             }
+
+            return redirect()->route('presensi', [
+                'schedule' => $schedule,
+                'insideRadius' => false
+            ]);
+
         }
+
+
     } //end of store
 }
