@@ -9,6 +9,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\Attendance;
 
 class AttendancesTable
 {
@@ -25,7 +26,19 @@ class AttendancesTable
                     })
             ->columns([
                 TextColumn::make('user.name')
+                    ->searchable()
                     ->sortable(),
+                TextColumn::make('is_late')
+                    ->label('Status')
+                    ->badge()
+                    ->getStateUsing(function ($record) {
+                        return $record->isLate() ? 'Terlambat' : 'Tepat Waktu';
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'Tepat Waktu' => 'success',
+                        'Terlambat' => 'danger',
+                    })
+                    ->description(fn (Attendance $record): string => 'Durasi Kerja : '.$record->workDuration()),
                 TextColumn::make('start_time')
                     ->label('Waktu Datang')
                     ->time()
@@ -48,6 +61,7 @@ class AttendancesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
