@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +29,12 @@ class SchedulesTable
             })
             ->columns([
                 TextColumn::make('user.name')
+                    ->label('Name')
+                    ->sortable()
                     ->searchable(),
+                //toggle akan hilang kecuali super admin
+                ToggleColumn::make('is_banned')
+                     ->hidden(fn () => !Auth::user()->hasRole('super_admin')),
                 IconColumn::make('is_wfa')
                     ->label('WFA')
                     ->boolean()

@@ -11,10 +11,19 @@ class Schedule extends Model
 {
     use HasFactory;
 
+    //memastikan nilainya boolean, walau sudah pindah ke hosting
+    //kadang di server hosting menjadi string
+    protected $casts = [
+        'is_wfa' => 'boolean',
+        'is_banned' => 'boolean'
+    ];
+
     protected $fillable = [
         'user_id',
         'shift_id',
         'office_id',
+        'is_wfa',
+        'is_banned',
     ];
 
     public function user(): BelongsTo

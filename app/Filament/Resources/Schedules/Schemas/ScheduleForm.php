@@ -15,6 +15,7 @@ class ScheduleForm
         ->schema([ // Atau ->components([ jika di Infolist
             ComponentsSection::make('Data Schedule') // Beri judul untuk Section
                 ->schema([
+                    Toggle::make('is_banned'),
                     Select::make('user_id')
                         ->relationship('user', 'name')
                         ->searchable()
@@ -25,7 +26,7 @@ class ScheduleForm
                     Select::make('office_id')
                         ->relationship('office', 'name')
                         ->required(),
-                Toggle::make('is_wfa'),
+                    Toggle::make('is_wfa'),
                 ]),
         ]);
     }
