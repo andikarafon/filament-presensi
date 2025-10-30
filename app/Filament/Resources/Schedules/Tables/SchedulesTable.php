@@ -11,6 +11,7 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\User;
 
 
 class SchedulesTable
@@ -23,7 +24,7 @@ class SchedulesTable
 
                 // Cegah error kalau belum login
                 //jika dijalankan tdk ada error, intelphensenya yang error
-                if ($user && ! $user->hasRole('super_admin')) {
+                if ($user instanceof User && ! $user->hasRole('super_admin')) {
                     $query->where('user_id', $user->id);
                 }
             })
@@ -34,7 +35,12 @@ class SchedulesTable
                     ->searchable(),
                 //toggle akan hilang kecuali super admin
                 ToggleColumn::make('is_banned')
-                     ->hidden(fn () => !Auth::user()->hasRole('super_admin')),
+                    ->hidden(function () {
+                        /** @var \App\Models\User|null $user */
+                        $user = Auth::user();
+
+                        return ! ($user && $user->hasRole('super_admin'));
+                    }),
                 IconColumn::make('is_wfa')
                     ->label('WFA')
                     ->boolean()

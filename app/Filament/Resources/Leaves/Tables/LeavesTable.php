@@ -10,6 +10,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use App\Models\User;
 
 class LeavesTable
 {
@@ -18,9 +19,10 @@ class LeavesTable
         return $table
                 ->modifyQueryUsing(function (Builder $query) {
                     $user = Auth::user();
+
                     // Cegah error kalau belum login
                     //jika dijalankan tdk ada error, intelphensenya yang error
-                    if ($user && ! $user->hasRole('super_admin')) {
+                    if ($user instanceof User && ! $user->hasRole('super_admin')) {
                         $query->where('user_id', $user->id);
                     }
                 })

@@ -8,6 +8,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LeaveForm
 {
@@ -32,7 +33,11 @@ class LeaveForm
                             Textarea::make('note')
                                 ->columnSpanFull(),
                     ])
-                    ->visible(fn() => Auth::user()?->hasRole('super_admin')),
+                    ->visible(function () {
+                        /** @var \App\Models\User|null $user */
+                        $user = Auth::user();
+                        return $user && $user->hasRole('super_admin');
+                    }),
                     //hanya muncul di super_admin saja
             ]);
         
