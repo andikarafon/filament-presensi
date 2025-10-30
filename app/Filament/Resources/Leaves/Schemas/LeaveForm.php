@@ -6,28 +6,36 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
-            ->components([
-                Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required(),
-                DatePicker::make('start_date')
-                    ->required(),
-                DatePicker::make('end_date')
-                    ->required(),
-                Textarea::make('reason')
-                    ->columnSpanFull(),
-                Select::make('status')
-                    ->options(['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected'])
-                    ->default('pending')
-                    ->required(),
-                Textarea::make('note')
-                    ->columnSpanFull(),
+        ->schema([ 
+                Section::make('Data Leave') // Beri judul untuk Section
+                ->schema([
+                        DatePicker::make('start_date')
+                            ->required(),
+                        DatePicker::make('end_date')
+                            ->required(),
+                        Textarea::make('reason')
+                            ->columnSpanFull(),
+                        ]),
+                    Section::make('Approval') // Beri judul untuk Section
+                    ->schema([
+                            Select::make('status')
+                                ->options(['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected'])
+                                ->default('pending'),
+                            Textarea::make('note')
+                                ->columnSpanFull(),
+                    ])
+                    ->visible(fn() => Auth::user()?->hasRole('super_admin')),
+                    //hanya muncul di super_admin saja
             ]);
+        
+        
     }
 }
