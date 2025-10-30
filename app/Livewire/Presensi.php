@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Attendance;
+use App\Models\Leave;
 use App\Models\Schedule;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -38,6 +39,19 @@ class Presensi extends Component
         ]);
 
         $schedule = Schedule::where('user_id', Auth::user()->id)->first();
+
+        //cek jika lagi cuti maka tidak bisa presensi
+        $today = Carbon::today()->format('Y-m-d');
+        $approvedLeave = Leave::where('user_id', Auth::user()->id)
+                              ->where('status', 'approved')
+                              ->whereDate('start_date', '<=', $today)
+                              ->whereDate('end_date', '>=', $today)
+                              ->exists();
+
+        if ($approvedLeave) {
+            session()->flash('error', 'Anda tidak dapat melakukan presensi karena sedang cuti.');
+            return; //break
+        }
 
         if ($schedule) {
             $attendance = Attendance::where('user_id', Auth::user()->id)

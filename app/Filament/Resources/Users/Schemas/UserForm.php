@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -53,7 +54,8 @@ class UserForm
                         ->multiple() //wajib untuk relasi many-to-many
                         ->preload()
                         ->searchable()
-                        ->required() // Menambahkan required untuk memastikan role terpilih
+                        ->required(), // Menambahkan required untuk memastikan role terpilih
+                    FileUpload::make('image') 
                 ]),
         ]);
     }
