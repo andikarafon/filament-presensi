@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use UnitEnum;
 
 class ScheduleResource extends Resource
 {
@@ -23,7 +24,9 @@ class ScheduleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Calendar;
 
-    protected static ?int $navigationSort = 4;
+    protected static string | UnitEnum | null $navigationGroup = 'Attendance Management';
+
+    protected static ?int $navigationSort = 7;
 
     public static function form(Schema $schema): Schema
     {

@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
+use UnitEnum;
 
 class ShiftResource extends Resource
 {
@@ -23,7 +24,9 @@ class ShiftResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::BookOpen;
 
-    protected static ?int $navigationSort = 2;
+    protected static string | UnitEnum | null $navigationGroup = 'Office Management';
+
+    protected static ?int $navigationSort = 6;
 
     public static function form(Schema $schema): Schema
     {

@@ -6,5 +6,7 @@ use Filament\Pages\Page;
 
 class Map extends Page
 {
-    protected string $view = 'filament.pages.map';
+        protected static ?int $navigationSort = 2;
+
+        protected string $view = 'filament.pages.map';
 }
