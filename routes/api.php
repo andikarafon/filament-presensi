@@ -14,4 +14,6 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/get-attendance-today',[AttendanceController::class, 'getAttendanceToday'])->name('get_attendance_today');
+    Route::get('/get-schedule', [AttendanceController::class, 'getSchedule'])->name('get_schedule');
+    Route::post('/store-attendance', [AttendanceController::class, 'store'])->name('store_attendance');
 });
