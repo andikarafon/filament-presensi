@@ -57,6 +57,7 @@ class AttendanceController extends Controller
             ]);
         }
 
+        //cek dulu cuti atau tidak
         $today = Carbon::today()->format('Y-m-d');
         $approvedLeave = Leave::where('user_id', Auth::user()->id)
                               ->where('status', 'approved')
@@ -113,6 +114,7 @@ class AttendanceController extends Controller
             ]);
         }
 
+        //cek dulu cuti atau tidak
         $today = Carbon::today()->format('Y-m-d');
         $approvedLeave = Leave::where('user_id', Auth::user()->id)
                               ->where('status', 'approved')
@@ -198,5 +200,32 @@ class AttendanceController extends Controller
             'data' => $attendanceList
         ]);
     } //getAttendanceByMonthAndYear
+
+    public function banned()
+    {
+        $schedule = Schedule::where('user_id', Auth::user()->id)->first();
+        if ($schedule) {
+            $schedule->update([
+                'is_banned' => true
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success banned schedule',
+            'data' => $schedule
+        ]);
+    } //end of banned
+
+
+    public function getPhoto()
+    {
+        $user = auth()->user();
+        return response()->json([
+            'success' => true,
+            'message' => 'Success get photo profile',
+            'data' => $user->image_url
+        ]);
+    }
 
 }

@@ -55,4 +55,10 @@ class User extends Authenticatable
         return $this->hasMany(Leave::class);
     }
 
+    //ini dipanggil dari API, untuk mendapatkan URL imagenya
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? url('storage/' . $this->image) : null;
+    }
+
 }
