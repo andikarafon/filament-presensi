@@ -129,6 +129,7 @@ return [
 
     'middleware' => [
         'web',
+        'api-doc-access',
         RestrictedDocsAccess::class,
     ],
 
